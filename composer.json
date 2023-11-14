@@ -1,0 +1,19 @@
+{
+    "name": "jhonathannila/app-salon_php_mvc_js_sass",
+    "description": "Proyecto PHP8, MVC, SASS, GULP, SQL",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "MVC\\" : "./",
+            "Controllers\\" : "./controllers",
+            "Model\\" : "./models"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jhonathan Nila",
+            "email": "nilalimon@gmail.com"
+        }
+    ],
+    "require": {}
+}

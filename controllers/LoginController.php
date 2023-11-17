@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use MVC\Router;
+use Classes\Email;
 use Model\Usuario;
 
 class LoginController {
@@ -30,7 +31,13 @@ class LoginController {
                     $alertas = Usuario::getAlertas();
                 } else {
                     $usuario->hashPassword();
-                    \debuguear($usuario);
+                    $usuario->crearToken();
+                    $email = new Email($usuario->nombre, $usuario->email, $usuario->token);
+                    $email->enviarConfirmacion();
+                    $resultado = $usuario->guardar();
+                    if($resultado) {
+                        header('Location: /mensaje');
+                    }
                 }
             }
         }
@@ -38,5 +45,8 @@ class LoginController {
             'usuario' => $usuario,
             'alertas' => $alertas
         ]);
+    }
+    public static function mensaje(Router $router) {
+        $router->render('auth/mensaje');
     }
 }

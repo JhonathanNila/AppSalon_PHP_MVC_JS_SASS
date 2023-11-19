@@ -8,7 +8,18 @@ use Model\Usuario;
 
 class LoginController {
     public static function login(Router $router) {
-        $router->render('auth/login');
+        $alertas = [];
+        $auth = new Usuario;
+        if($_SERVER['REQUEST_METHOD'] === "POST") {
+            $auth = new Usuario($_POST);
+            $alertas = $auth->validarLogin();
+
+        }
+
+        $router->render('auth/login', [
+            'alertas' => $alertas,
+            'auth' => $auth
+        ]);
     }
     public static function logout() {
         echo "Desde Logout";
@@ -48,5 +59,22 @@ class LoginController {
     }
     public static function mensaje(Router $router) {
         $router->render('auth/mensaje');
+    }
+    public static function confirmar(Router $router) {
+        $alertas = [];
+        $token = s($_GET['token']);
+        $usuario = Usuario::where('token', $token);
+        if(empty($usuario)) {
+            Usuario::setAlerta('error', 'Token no válido');
+        }else {
+            $usuario->confirmado = "1";
+            $usuario->token = '';
+            $usuario->guardar();
+            Usuario::setAlerta('exito', 'Cuenta Verificada Exitosamente');
+        }
+        $alertas = Usuario::getAlertas();
+        $router->render('auth/confirmar-cuenta', [
+            'alertas' => $alertas
+        ]);
     }
 }

@@ -13,7 +13,6 @@ class Email {
         $this->nombre = $nombre;
         $this->token = $token;
     }
-
     public function enviarConfirmacion() {
         $mail = new PHPMailer();
         $mail->isSMTP();
@@ -34,6 +33,5 @@ class Email {
         $contenido .= "</html>";
         $mail->Body = $contenido;
         $mail->send();
-
     }
 }

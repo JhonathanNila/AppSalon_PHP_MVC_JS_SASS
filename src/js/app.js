@@ -20,6 +20,8 @@ function iniciarApp() {
     paginaSiguiente();
     paginaAnterior();
     consultarAPI();
+    nombreCliente();
+    seleccionarFecha();
 }
 function mostrarSeccion() {
     const seccionAnterior = document.querySelector('.mostrar');
@@ -113,8 +115,42 @@ function mostrarServicios(servicios) {
 function seleccionarServicio(servicio) {
     const {id} = servicio;
     const {servicios} = cita;
-    cita.servicios = [...servicios, servicio];
     const divServicio = document.querySelector(`[data-id-servicio="${id}"]`);
-    divServicio.classList.add('seleccionado');
-    console.log(servicio);
+    if(servicios.some(agregado => agregado.id === id)) {
+        cita.servicios = servicios.filter(agregado => agregado.id !== id);
+        divServicio.classList.remove('seleccionado');
+
+    }else {
+        cita.servicios = [...servicios, servicio];
+        divServicio.classList.add('seleccionado');
+    }
+    console.log(cita);
+}
+function nombreCliente() {
+    cita.nombre = document.querySelector('#nombre').value;
+}
+function seleccionarFecha() {
+    const inputFecha = document.querySelector('#fecha');
+    inputFecha.addEventListener('input', function(e) {
+        const dia = new Date(e.target.value).getUTCDay();
+        if([0].includes(dia)) {
+            e.target.value = '';
+            mostrarAlerta('Domingos no hay servicio', 'error');
+        }else {
+            cita.fecha = e.target.value;
+        }
+    });
+}
+function mostrarAlerta(mensaje, tipo) {
+    const alertaPrevia = document.querySelector('.alerta');
+    if(alertaPrevia) return;
+    const alerta = document.createElement('DIV');
+    alerta.textContent = mensaje;
+    alerta.classList.add('alerta');
+    alerta.classList.add(tipo);
+    const formulario = document.querySelector('.formulario');
+    formulario.appendChild(alerta);
+    setTimeout(() => {
+        alerta.remove();
+    }, 3000);
 }

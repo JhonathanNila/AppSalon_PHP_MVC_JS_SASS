@@ -30,6 +30,7 @@
                             <input 
                                 type="date" 
                                 id="fecha"
+                                min="<?php echo date('Y-m-d'); ?>"
                             />
                     </div>
                     <div class="campo">

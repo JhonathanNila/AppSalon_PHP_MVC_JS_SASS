@@ -22,6 +22,7 @@ function iniciarApp() {
     consultarAPI();
     nombreCliente();
     seleccionarFecha();
+    seleccionarHora();
 }
 function mostrarSeccion() {
     const seccionAnterior = document.querySelector('.mostrar');
@@ -138,6 +139,19 @@ function seleccionarFecha() {
             mostrarAlerta('Domingos no hay servicio', 'error');
         }else {
             cita.fecha = e.target.value;
+        }
+    });
+}
+function seleccionarHora() {
+    const inputHora = document.querySelector('#hora');
+    inputHora.addEventListener('input', function(e) {
+        const horaCita = e.target.value;
+        const hora = horaCita.split(":")[0];
+        if(hora < 10 || hora > 18) {
+            mostrarAlerta('El horario es de 10:00 a 18:00', 'error');
+        }else {
+            cita.hora = e.target.value;
+            console.log(cita);
         }
     });
 }

@@ -223,9 +223,14 @@ function mostrarAlerta(mensaje, tipo, elemento, desaparece = true) {
         }, 3000);
     }
 }
-function reservarCita() {
+async function reservarCita() {
     const datos = new FormData();
     datos.append('nombre', 'Juan');
-    
+    const url = 'http://localhost:3000/api/citas';
+    const respuesta = await fetch(url, {
+        method: 'POST'
+    });
+    const resultado = await respuesta.json();
+    console.log(resultado);
     //console.log([...datos]);
 }

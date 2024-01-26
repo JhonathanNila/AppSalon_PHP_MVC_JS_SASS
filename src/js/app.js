@@ -3,6 +3,7 @@ const pasoInicial = 1;
 const pasoFinal = 3;
 
 const cita = {
+    id: '',
     nombre: '',
     fecha: '',
     hora: '',
@@ -20,6 +21,7 @@ function iniciarApp() {
     paginaSiguiente();
     paginaAnterior();
     consultarAPI();
+    idCliente();
     nombreCliente();
     seleccionarFecha();
     seleccionarHora();
@@ -179,6 +181,9 @@ function seleccionarServicio(servicio) {
         divServicio.classList.add('seleccionado');
     }
 }
+function idCliente() {
+    cita.id = document.querySelector('#id').value;
+}
 function nombreCliente() {
     cita.nombre = document.querySelector('#nombre').value;
 }
@@ -224,20 +229,39 @@ function mostrarAlerta(mensaje, tipo, elemento, desaparece = true) {
     }
 }
 async function reservarCita() {
-    const { nombre, fecha, hora, servicios } = cita;
+    const { nombre, fecha, hora, servicios, id } = cita;
     const idServicios = servicios.map(servicio => servicio.id);
     const datos = new FormData();
-    datos.append('nombre', nombre);
     datos.append('fecha', fecha);
     datos.append('hora', hora);
+    datos.append('usuarioID', id);
     datos.append('servicios', idServicios);
     // console.log([...datos]);
-    const url = 'http://localhost:3000/api/citas';
-    const respuesta = await fetch(url, {
-        method: 'POST',
-        body: datos
-    });
-    const resultado = await respuesta.json();
-    console.log(resultado);
-    //console.log([...datos]);
+    try {
+        const url = 'http://localhost:3000/api/citas';
+        const respuesta = await fetch(url, {
+            method: 'POST',
+            body: datos
+        });
+        const resultado = await respuesta.json();
+        console.log(resultado.resultado);
+        if(resultado.resultado) {
+            Swal.fire({
+                icon: "success",
+                title: "Cita creada",
+                text: "Tu cita fue creada correctamente",
+                button: "OK"
+            }).then( () => {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
+            })
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Ocurrio un error"
+        });
+    }   
 }
